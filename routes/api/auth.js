@@ -4,13 +4,16 @@ const authController = require("../../controllers");
 
 const schemas = require("../../schemas/users");
 
-const { validateBody, authenticate } = require("../../middlewares");
+const { validateBody, authenticate, upload } = require("../../middlewares");
 
 const router = express.Router();
 
 // signup/register можливі назви для реєстрації user
+// upload.array("poster", 8) якщо декілька файлів в одному полі- назва поля і кіл-сть файлів
+// upload.fields([{name: "poster", maxCount:1}]) якщо файли в декількох полях
 router.post(
   "/register",
+  upload.single("avatarURL"),
   validateBody(schemas.userRegisterSchema),
   authController.signup
 );
@@ -32,5 +35,7 @@ router.patch(
   validateBody(schemas.userUpdateSubscriptionShema),
   authController.updateSubscription
 );
+
+router.patch("/avatars", authenticate, upload.single("avatarURL"), authController.updateAvatar);
 
 module.exports = router;
