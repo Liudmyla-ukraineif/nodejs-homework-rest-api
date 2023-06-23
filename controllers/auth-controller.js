@@ -1,5 +1,6 @@
 const fs = require("fs/promises");
 const path = require("path");
+const jimp = require("jimp");
 
 const gravatar = require("gravatar");
 
@@ -99,13 +100,20 @@ const updateAvatar = async (req, res) => {
   const { _id } = req.user;
   const { path: oldPath, filename } = req.file;
   const newPath = path.join(userAvatarDir, filename);
+
+  const img = await jimp.read(oldPath);
+  await img
+    .autocrop()
+    .cover(250, 250, jimp.HORIZONTAL_ALIGN_CENTER || jimp.VERTICAL_ALIGN_MIDDLE)
+    .writeAsync(oldPath);
+
   await fs.rename(oldPath, newPath);
   const avatarURL = path.join("avatars", filename);
-  await User.findByIdAndUpdate(_id, {avatarURL});
+  await User.findByIdAndUpdate(_id, { avatarURL });
 
   res.json({
     avatarURL,
-  })
+  });
 };
 
 module.exports = {
