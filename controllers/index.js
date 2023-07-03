@@ -10,6 +10,8 @@ const {
 const { 
   signup, 
   signin, 
+  verify,
+  resendVerify,
   getCurrent, 
   logout,
   updateSubscription,
@@ -24,6 +26,8 @@ module.exports = {
   updateById,
   updateFavorite,
   signup,
+  verify,
+  resendVerify,
   signin,
   getCurrent,
   logout,
