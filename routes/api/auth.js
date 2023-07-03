@@ -18,6 +18,11 @@ router.post(
   authController.signup
 );
 
+// верифікація
+router.get("/verify/:verificationCode", authController.verify);
+
+router.post("/verify", validateBody(schemas.userEmailSchema), authController.resendVerify)
+
 // signin/login можливі назви для логування user
 router.post(
   "/login",
@@ -36,6 +41,11 @@ router.patch(
   authController.updateSubscription
 );
 
-router.patch("/avatars", authenticate, upload.single("avatarURL"), authController.updateAvatar);
+router.patch(
+  "/avatars",
+  authenticate,
+  upload.single("avatarURL"),
+  authController.updateAvatar
+);
 
 module.exports = router;
